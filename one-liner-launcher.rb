@@ -32,7 +32,7 @@ class MikerCodes
 	
 	def run
 	
-		parseHTML()
+		self.parseHTML()
 	
 		loop do 
 		
@@ -65,9 +65,9 @@ class MikerCodes
 				exit 69
 			when %r~\d+~
 				if chosen.match(%r~perl~i) then
-					runCode(chosen,go)
+					self.runCode(chosen,go)
 				elsif chosen.match(%r~ruby~i) then
-					runCode(chosen,go)
+					self.runCode(chosen,go)
 				else
 					puts %q|> error so quitting!|.red
 					exit 69
