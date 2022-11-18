@@ -1,4 +1,7 @@
 # One-Liner Launcher
 
-CLI menu that remotely launches my collection of one-liners from https://miker.codes
+A CLI menu that remotely launches my collection of one-liners located at:
+
+- https://miker.codes
+- or https://github.com/16BitMiker/one-liners
 
