@@ -14,12 +14,12 @@ require 'table_print'
 
 class MikerCodes
 
-	def initialize()
+	def initialize
 	
 		@perl = []
 		@ruby = []
 		
-		@curl = <<-"CURL".gsub(%r~^\s+|\t+|(\n)~) { $1 ? %q| | : %q|| }
+		@curl = <<~"CURL".gsub(%r~\n~, %q| |)
 			curl
 			--fail
 			--silent
@@ -32,7 +32,7 @@ class MikerCodes
 	
 	def run
 	
-		self.parseHTML()
+		self.parseHTML
 	
 		loop do 
 		
@@ -49,7 +49,7 @@ class MikerCodes
 				chosen = %q|@perl|
 			when %r~^q(?:uit)?$~i
 				puts %q|> quitting!|.red 
-				exit 69
+				exit 0
 			else 
 				puts %q|> nothing selected...|.red
 				next
@@ -62,7 +62,7 @@ class MikerCodes
 			case go
 			when %r~q(?:uit)?~i
 				puts %q|quiting!|.red 
-				exit 69
+				exit 0
 			when %r~\d+~
 				if chosen.match(%r~perl~i) then
 					self.runCode(chosen,go)
@@ -92,7 +92,6 @@ class MikerCodes
 			
 			s.skip_until(re)
 			if s.check(%r~[^"]+\.sh(?=")~) then
-			
 				type = ''
 				if s.check(%r~pl[^"]+\.sh(?=")~) then
 					type = %q|@perl|
@@ -101,19 +100,20 @@ class MikerCodes
 				end
 				
 				row = {}
-				row = { choice: (eval type).length, files: s.scan_until(%r~(?=")~) }
+				row = { choice: (instance_variable_get type).length, files: s.scan_until(%r~(?=")~) }
 				
-				(eval type).push( row )
+				(instance_variable_get type).push( row )
 			end
 		end
 	end
 	
-	def runCode(chosen,n)
+	def runCode(chosen, n)
 		
 		n = n.to_i
 		
-		ol = eval(chosen)[n][:files]
+		ol = instance_variable_get(chosen)[n][:files]
 		
+		# redunant
 		curl = %Q`#{@curl % ol}`.gsub(%r~(\n)|\s{2,}~) { $1 ? %q|| : %q| | }
 		
 		puts %Q|> downloading...|
